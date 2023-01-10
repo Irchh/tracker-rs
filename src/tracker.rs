@@ -53,7 +53,7 @@ impl Tracker {
                         let note = note.unwrap();
                         let frequency = note.frequency;
                         let sample = note.sample;
-                        self.samples[sample as usize].set_sample_rate(frequency as u32);
+                        self.samples[sample as usize].set_sample_rate(frequency);
                         self.sinks[track].append(
                             self.samples[sample as usize].clone()
                                 .take_duration(Duration::from_secs_f64(60.0/375.0))
@@ -78,6 +78,20 @@ impl Tracker {
         for sink in &self.sinks {
             sink.sleep_until_end();
         }
+    }
+
+    pub fn play_sample(&mut self, sample: u8, frequency: f32) {
+        self.sinks[0].pause();
+
+        self.samples[sample as usize].set_sample_rate(frequency);
+        self.sinks[0].append(
+            self.samples[sample as usize].clone()
+                //.take_duration(Duration::from_secs_f64(60.0/375.0))
+                .amplify(0.20)
+        );
+
+        self.sinks[0].play();
+        self.sinks[0].sleep_until_end();
     }
 
     pub fn load_file(&mut self, file: &str) {

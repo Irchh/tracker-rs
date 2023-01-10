@@ -11,6 +11,8 @@ pub struct Sample {
 
 impl Sample {
     pub fn new(sample_rate: u32, sample: SampleInfo) -> Self {
+        println!("Sample data len: {}", sample.data.len());
+        println!("Sample reported len: {}", sample.length);
         Self {
             num_sample: 0,
             _sample_rate: sample_rate,
@@ -18,8 +20,17 @@ impl Sample {
         }
     }
 
-    pub fn set_sample_rate(&mut self, sample_rate: u32) {
-        self._sample_rate = sample_rate;
+    fn get_finetune(&self) -> u8 {
+        if (self.sample.finetune&0b1000) != 0 {
+            self.sample.finetune|0b11110000
+        } else {
+            self.sample.finetune
+        }
+    }
+
+    /// Sets the sample rate while accounting for finetuning.
+    pub fn set_sample_rate(&mut self, sample_rate: f32) {
+        self._sample_rate = (sample_rate*(1.06_f32.powf((self.get_finetune() as i8 as f32)/8.0))) as u32;
         self.num_sample = 0;
     }
 }
