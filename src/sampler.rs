@@ -42,11 +42,11 @@ impl Iterator for Sample {
         if self.sample.data.len() == 0 {
             return Some(0.0);
         }
+        let value = self.sample.data[self.num_sample];
+        self.num_sample = self.num_sample.wrapping_add(1);
         if self.num_sample >= self.sample.data.len() {
             self.num_sample = 0;
         }
-        let value = self.sample.data[self.num_sample];
-        self.num_sample = self.num_sample.wrapping_add(1);
         Some((value as i8 as f32)/(i8::MAX as f32))
     }
 }
