@@ -41,12 +41,20 @@ impl Tracker {
             sink.pause();
         }
 
+        //let delay = 60.0/375.0;
+        let tpr = 8.0;
+        let tempo = 125.0;
+        let delay = tpr*2.5/tempo;
+
         let lines = self.patterns[0][0].len();
         println!("Playing {} lines", lines);
         for &position in &self.positions {
             let pattern = &self.patterns[position as usize];
             for line in 0..lines {
                 for (track, notes) in pattern.iter().enumerate() {
+                    /*if track != 3 {
+                        continue;
+                    }*/
                     let note = notes[line].as_ref();
                     if note.is_some() {
                         //println!("Playing note: {}", note.as_ref().unwrap());
@@ -56,14 +64,14 @@ impl Tracker {
                         self.samples[sample as usize].set_sample_rate(frequency);
                         self.sinks[track].append(
                             self.samples[sample as usize].clone()
-                                .take_duration(Duration::from_secs_f64(60.0/375.0))
+                                .take_duration(Duration::from_secs_f64(delay))
                                 .amplify(0.20)
                         )
                     } else {
                         //println!("Playing note: ---");
                         self.sinks[track].append(
                             SineWave::new(0.0)
-                                .take_duration(Duration::from_secs_f64(60.0/375.0))
+                                .take_duration(Duration::from_secs_f64(delay))
                                 .amplify(0.20)
                         )
                     }

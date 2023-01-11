@@ -12,6 +12,6 @@ use crate::tracker::Tracker;
 fn main() {
     let mut tracker = Tracker::new(4, 64);
     tracker.load_file("./3266CHIP.MOD");
-    tracker.play_sample(1, 8287.0);
-    //tracker.play();
+    //tracker.play_sample(1, 8287.0);
+    tracker.play();
 }
