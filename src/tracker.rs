@@ -3,7 +3,7 @@ use std::io::BufReader;
 use std::time::Duration;
 use modfile::ptmf;
 use rodio::{OutputStream, OutputStreamHandle, Sink, Source};
-use rodio::source::SineWave;
+use rodio::source::{SamplesConverter, SineWave};
 use crate::note::Note;
 use crate::sampler::Sample;
 
@@ -104,7 +104,7 @@ impl Tracker {
 
     pub fn load_file(&mut self, file: &str) {
         let mut reader = BufReader::new(File::open(file).unwrap());
-        let mut module = ptmf::read_mod(&mut reader, false).unwrap();
+        let mut module = ptmf::read_mod(&mut reader, true).unwrap();
 
         println!("Loading: {}", module.name);
         println!("\tLength: {:?}", module.length);
